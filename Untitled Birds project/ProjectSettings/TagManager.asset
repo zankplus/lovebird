@@ -1,0 +1,89 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - KillPlane
+  - Checkpoint
+  - MovingPlatform
+  - Enemy
+  - Boss
+  - Ground
+  - OneWayPlatform
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - Ground
+  - Player
+  - Immediate Background
+  - One Way Platform
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Background
+    uniqueID: 1106643981
+    locked: 0
+  - name: Title Screen Buttons
+    uniqueID: 1946895841
+    locked: 0
+  - name: Walls
+    uniqueID: 2650581893
+    locked: 0
+  - name: World Objects
+    uniqueID: 2889947409
+    locked: 0
+  - name: Textbox
+    uniqueID: 943359113
+    locked: 0
+  - name: Textbox Edge
+    uniqueID: 4199349203
+    locked: 0
+  - name: Game Over
+    uniqueID: 1013812373
+    locked: 0
+  - name: Player
+    uniqueID: 4293538839
+    locked: 0
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Water
+    uniqueID: 1762576383
+    locked: 0
+  - name: Text
+    uniqueID: 569791837
+    locked: 0
+  - name: Effects
+    uniqueID: 827647343
+    locked: 0
+  - name: New Layer
+    uniqueID: 428155135
+    locked: 0
+  - name: Splash
+    uniqueID: 1226959025
+    locked: 0

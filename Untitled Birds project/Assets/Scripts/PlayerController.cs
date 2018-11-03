@@ -35,6 +35,8 @@ public class PlayerController : MonoBehaviour
     public Animator anim;
     private LevelManager levelManager;
 
+    public bool hatless;
+
     public float groundCheckHeight;
 
     public AudioSource jumpSound;
@@ -56,6 +58,11 @@ public class PlayerController : MonoBehaviour
     public float gravityMultiplier = -0.1f;
     public float rateMultiplier = 0.1f;
 
+    public bool autoMoveRight;
+    public bool autoMoveLeft;
+    public SpeechBubble leftBubble;
+    public SpeechBubble rightBubble;
+
     public ParticleSystem.MainModule newMain;
     public ParticleSystem.EmissionModule newEmission;
 
@@ -67,7 +74,7 @@ public class PlayerController : MonoBehaviour
         respawnPosition = transform.position;
 
         activeMoveSpeed = moveSpeed;
-        canMove = true;
+        // canMove = true;
 
         _collider = GetComponent<BoxCollider2D>();
         leftFoot = new Vector2(-_collider.size.x / 2f + _collider.offset.x * transform.localScale.x, _collider.offset.y - _collider.size.y / 2f);
@@ -127,14 +134,20 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetButtonUp("Jump"))
             jumpQueued = false;
+
+        // Hat check
+
+        if (hatless)
+            anim.SetBool("Hatless", hatless);
     }
 
     void FixedUpdate ()
     {
         bool wasGrounded;
         Transform oldParent = transform.parent;
-        float velocity = 0;
 
+        // Previously = 0
+        float velocity = rb.velocity.x;
 
         // Grounded check
         wasGrounded = isGrounded;
@@ -161,7 +174,7 @@ public class PlayerController : MonoBehaviour
         }
 
 
-        if (canMove)
+        
         {
             if (onPlatform)
             {
@@ -174,7 +187,7 @@ public class PlayerController : MonoBehaviour
 
 
             // Left-right movement
-            if (Input.GetAxisRaw("Horizontal") > 0f)
+            if ((Input.GetAxisRaw("Horizontal") > 0f && canMove) || autoMoveRight)
             {
                 if (rb.velocity.x < 0)
                     velocity = rb.velocity.x + reversalFactor * currentSpeedPenalty * moveDeceleration * Time.deltaTime;
@@ -183,7 +196,7 @@ public class PlayerController : MonoBehaviour
 
                 transform.localScale = new Vector3(1f, 1f, 1f);
             }
-            else if (Input.GetAxisRaw("Horizontal") < 0f)
+            else if ((Input.GetAxisRaw("Horizontal") < 0f && canMove) || autoMoveLeft)
             {
                 if (rb.velocity.x > 0)
                     velocity = rb.velocity.x - reversalFactor * currentSpeedPenalty * moveDeceleration * Time.deltaTime;
@@ -193,8 +206,6 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                // rb.velocity = new Vector3(0, rb.velocity.y, 0);
-
                 // Decelerate
                 if (rb.velocity.x > 0)
                 {
@@ -213,7 +224,7 @@ public class PlayerController : MonoBehaviour
             //  - you press jump while you are not grounded, within the late jump window, or
             //  - you become grounded while while a jump was queued (i.e., by pressing jump during your descent and holding it until you land)
 
-            if (Input.GetButtonDown("Jump"))
+            if (Input.GetButtonDown("Jump") && canMove)
             {
                 if (isGrounded || lateJumpToleranceCounter > 0)
                     InitiateJump();
@@ -247,7 +258,7 @@ public class PlayerController : MonoBehaviour
         // myAnim.SetFloat("KB", knockbackCounter);
     }
 
-    private void InitiateJump()
+    public void InitiateJump()
     {
         if (Input.GetAxisRaw("Vertical") < 0 && isGrounded && transform.parent != null && transform.parent.tag == "OneWayPlatform")
         {

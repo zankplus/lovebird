@@ -40,16 +40,18 @@ public class RisingWave : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (transform.position.y < target.position.y)
-        {
-            transform.Translate(Vector2.up * speed * Time.deltaTime);
-            if (transform.position.y > target.position.y)
-                transform.position = new Vector3(transform.position.x, target.position.y, transform.position.z);
-        }
+        if (target)
+            if (transform.position.y < target.position.y)
+            {
+                transform.Translate(Vector2.up * speed * Time.deltaTime);
+                if (transform.position.y > target.position.y)
+                    transform.position = new Vector3(transform.position.x, target.position.y, transform.position.z);
+            }
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        Debug.Log("Collided with " + other.gameObject);
         if (other.tag == "Player")
         {
             audioSource.PlayOneShot(splashIn);
@@ -58,6 +60,10 @@ public class RisingWave : MonoBehaviour
             Splash();
 
             player.Submerge();
+        }
+        else if (other.tag == "Main Menu Text")
+        {
+            audioSource.PlayOneShot(splashIn);
         }
     }
 
@@ -71,6 +77,10 @@ public class RisingWave : MonoBehaviour
 
             Splash();
             player.Emerge();
+        }
+        else if (other.tag == "Main Menu Text")
+        {
+            audioSource.PlayOneShot(splashOut);
         }
     }
 

@@ -17,6 +17,7 @@ public class LevelManager : MonoBehaviour
     public AudioSource levelMusic;
     public AudioSource gameOverMusic;
     public bool respawnCoActive;
+    public bool playerCanMoveImmediately;
 
     public float cameraPanUpTime;
     public float cameraPanUpSpeed;
@@ -40,22 +41,7 @@ public class LevelManager : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        // Pre-level setup
-        // Before the level starts, the camera should lerp to the starting position and doors should open in front of player
-        if (state == LevelState.START_LEVEL)
-        {
-            _camera.transform.position = Vector3.Lerp(_camera.transform.position, _camera.target, cameraPanTimer * cameraPanUpSpeed);
 
-            cameraPanTimer += Time.deltaTime;
-
-            if (cameraPanTimer > cameraPanUpTime)
-            {
-                _camera.enabled = true;
-                player.canMove = true;
-
-                state = LevelState.IN_PROGRESS;
-            }
-        }
     }
 
 

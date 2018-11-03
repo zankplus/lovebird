@@ -11,6 +11,7 @@ TagManager:
   - Boss
   - Ground
   - OneWayPlatform
+  - Main Menu Text
   layers:
   - Default
   - TransparentFX
@@ -57,20 +58,26 @@ TagManager:
   - name: World Objects
     uniqueID: 2889947409
     locked: 0
-  - name: Textbox
-    uniqueID: 943359113
-    locked: 0
-  - name: Textbox Edge
-    uniqueID: 4199349203
-    locked: 0
   - name: Game Over
     uniqueID: 1013812373
     locked: 0
   - name: Player
     uniqueID: 4293538839
     locked: 0
+  - name: Foreground
+    uniqueID: 3791528229
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Blinders
+    uniqueID: 3471417821
+    locked: 0
+  - name: Textbox
+    uniqueID: 943359113
+    locked: 0
+  - name: Textbox Edge
+    uniqueID: 4199349203
     locked: 0
   - name: Water
     uniqueID: 1762576383

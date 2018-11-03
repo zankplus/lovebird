@@ -19,7 +19,10 @@ public class CameraController : MonoBehaviour
     public Transform fallingFollowTarget;
     public Vector3 target;
 
-    
+    public bool lerpMode;
+    public float cameraLerpTimer;
+    public float cameraLerpTime;
+    public float cameraLerpSpeed;
 
     private float increment;
     private Camera _camera;
@@ -40,63 +43,77 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        // If the level is in progress, the camera should follow the player
-        if (focusUpward)
+        if (lerpMode)
         {
-            if (player.isGrounded && player.rb.velocity.y == 0)
+            transform.position = Vector3.Lerp(transform.position, target, cameraLerpTimer * cameraLerpSpeed);
+
+            cameraLerpTimer += Time.deltaTime;
+
+            if (transform.position == target)
             {
-                // Use platform snapping for upward movement
-                if (player.transform.position.y > target.y)
-                {
-
-                    target = new Vector3(transform.position.x, player.transform.position.y - upwardAnchor.localPosition.y, transform.position.z);
-
-                }
+                lerpMode = false;
+                cameraLerpTimer = 0;
+                Debug.Log("Done lerping to " + target);
             }
-
-            //else if (player.transform.position.y > downwardAnchor.position.y)
-            //   target = new Vector3(transform.position.x, player.transform.position.y - upwardAnchor.localPosition.y, transform.position.z);
-
-            else if (player.transform.position.y < downwardAnchorReversalPoint.position.y && player.rb.velocity.y < 0)
-                focusUpward = false;
         }
         else
         {
-            if (player.transform.position.y < downwardAnchor.position.y)
-                target = new Vector3(transform.position.x, player.transform.position.y - downwardAnchor.localPosition.y, transform.position.z);
+            // If the level is in progress, the camera should follow the player
+            if (focusUpward)
+            {
+                if (player.isGrounded && player.rb.velocity.y == 0)
+                {
+                    // Use platform snapping for upward movement
+                    if (player.transform.position.y > target.y)
+                    {
 
-            if (player.transform.position.y > upwardAnchorReversalPoint.position.y && player.rb.velocity.y > 0)
-                focusUpward = true;
+                        target = new Vector3(transform.position.x, player.transform.position.y - upwardAnchor.localPosition.y, transform.position.z);
+
+                    }
+                }
+
+                //else if (player.transform.position.y > downwardAnchor.position.y)
+                //   target = new Vector3(transform.position.x, player.transform.position.y - upwardAnchor.localPosition.y, transform.position.z);
+
+                else if (player.transform.position.y < downwardAnchorReversalPoint.position.y && player.rb.velocity.y < 0)
+                    focusUpward = false;
+            }
+            else
+            {
+                if (player.transform.position.y < downwardAnchor.position.y)
+                    target = new Vector3(transform.position.x, player.transform.position.y - downwardAnchor.localPosition.y, transform.position.z);
+
+                if (player.transform.position.y > upwardAnchorReversalPoint.position.y && player.rb.velocity.y > 0)
+                    focusUpward = true;
+            }
+
+            // Move toward target
+            if (target.y > transform.position.y)
+            {
+                transform.Translate(Vector3.up * Mathf.Max(currentSpeed, Mathf.Abs(player.rb.velocity.y)) * Time.deltaTime);
+
+                if (transform.position.y > target.y)
+                    transform.position = new Vector3(transform.position.x, target.y, transform.position.z);
+            }
+            else if (target.y < transform.position.y)
+            {
+                transform.Translate(Vector3.down * Mathf.Max(currentSpeed, Mathf.Abs(player.rb.velocity.y) + currentSpeed) * Time.deltaTime);
+
+                if (transform.position.y < target.y)
+                    transform.position = new Vector3(transform.position.x, target.y, transform.position.z);
+            }
+
+            // Don't move below the lowest point of the level
+            if (transform.position.y < lowestPosition.position.y)
+                transform.position = lowestPosition.position;
+
+            // Or above the highest
+            if (transform.position.y > highestPosition.position.y)
+                transform.position = highestPosition.position;
+
+            // Snap camera to pixel grid
+            transform.position = new Vector3(transform.position.x - mod(transform.position.x, increment), transform.position.y - mod(transform.position.y, increment), transform.position.z);
         }
-
-        // Move toward target
-        if (target.y > transform.position.y)
-        {
-            transform.Translate(Vector3.up * Mathf.Max(currentSpeed, Mathf.Abs(player.rb.velocity.y)) * Time.deltaTime);
-
-            if (transform.position.y > target.y)
-                transform.position = new Vector3(transform.position.x, target.y, transform.position.z);
-        }
-        else if (target.y < transform.position.y)
-        {
-            transform.Translate(Vector3.down * Mathf.Max(currentSpeed, Mathf.Abs(player.rb.velocity.y) + currentSpeed) * Time.deltaTime);
-
-            if (transform.position.y < target.y)
-                transform.position = new Vector3(transform.position.x, target.y, transform.position.z);
-        }
-
-        // Don't move below the lowest point of the level
-        if (transform.position.y < lowestPosition.position.y)
-            transform.position = lowestPosition.position;
-
-        // Or above the highest
-        if (transform.position.y > highestPosition.position.y)
-            transform.position = highestPosition.position;
-        
-       
-        
-        // Snap camera to pixel grid
-        transform.position = new Vector3(transform.position.x - mod(transform.position.x, increment), transform.position.y - mod(transform.position.y, increment), transform.position.z);
     }
 
     private float mod(float a, float b)

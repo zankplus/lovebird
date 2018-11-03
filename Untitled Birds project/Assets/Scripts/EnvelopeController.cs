@@ -139,6 +139,7 @@ public class EnvelopeController : MonoBehaviour
         waterPatterns[0].SetActive(true);
         waterPatterns[1].SetActive(true);
         blueBackground.gameObject.SetActive(true);
+        submergedText.GetComponent<BoxCollider2D>().enabled = true;
     }
 
     private IEnumerator WaveFall()
@@ -149,6 +150,7 @@ public class EnvelopeController : MonoBehaviour
 
         startButton.SetActive(true);
         quitButton.SetActive(true);
+        submergedText.tag = "Main Menu Text";
     }
 
     private void ShowUpperLayer()
